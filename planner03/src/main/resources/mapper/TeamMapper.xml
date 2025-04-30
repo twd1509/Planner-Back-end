@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.planner03.team.mapper.TeamMapper">
+	<!--<< 팀 >>-->
+	<!--팀 등록-->
+	<insert id="insertTeam">
+		INSERT INTO team (owner_id, title, reg_dt, update_dt) VALUES (#{ownerId}, #{title}, now(), now())
+	</insert>
+	<!--팀 삭제(id 기준)-->
+	<delete id="deleteTeam">
+		DELETE FROM team FROM id = #{id}
+	</delete>
+	<!--팀 삭제(작성자 기준) (회원 삭제 시 사용될 예정)-->
+	<delete id="deleteTeamByOwnerId">
+		DELETE FROM team WHERE owner_id = #{ownerId}
+	</delete>
+	
+	<!--<< 팀 초대 >>-->
+	<!--팀 초대 인원 추가-->
+	<insert id="insertTeamInvitation">
+		INSERT INTO teamInvitation (team_id, user_id, user_email, status, reg_dt, update_dt) VALUES (#{teamId}, #{userId}, #{userEmail}, 'N', now(), now())
+	</insert>
+	<!--팀 초대 수락-->
+	<update id="acceptInvitation">
+		UPDATE teamInvitation SET status = 'Y', update_dt = now() WHERE team_id = #{teamId} AND user_id = #{user_id}
+	</update>
+	<!--팀 초대 기록 삭제-->
+	<delete id="deleteTeamInvitationById">
+		DELETE FROM teamInvitation FROM id = #{id}
+	</delete>
+	<!--팀 삭제 시 팀 초대 기록 삭제-->
+	<delete id="deleteTeamInvitationByTeamId">
+		DELETE FROM teamInvitation FROM team_id = #{teamId}
+	</delete>
+	
+	<!--<< 팀원 >>-->
+	<!--팀원 등록-->
+	<insert id="insertTeamMember">
+		INSERT INTO teamMember (team_id, user_id, auth, join_dt, update_dt) VALUES (#{teamId}, #{userId}, #{auth}, now(), now())
+	</insert>
+	<!--팀원 삭제-->
+	<delete id="deleteTeamMember">
+		DELETE FROM teamMember WHERE id = #{id}
+	</delete>
+	<!--팀원 일정 작성 권한 수정-->
+	<update id="updateTeamMemberAuth">
+		UPDATE teamMember SET auth = #{auth}, update_dt = now() WHERE id = #{id} 
+	</update>
+	<!--팀 삭제 시 팀원 삭제-->
+	<delete id="deleteTeamMemberByTeamId">
+		DELETE FROM teamMember WHERE team_id = #{teamId}
+	</delete>
+</mapper>
