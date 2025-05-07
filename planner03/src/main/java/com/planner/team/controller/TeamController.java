@@ -37,7 +37,7 @@ public class TeamController {
 		int result = 0;
 		
 		try {
-			result = service.addTeamInvitation(vo.getTeamId(), vo.getUserId(), vo.getUserEmail());
+			result = service.addInvitation(vo.getTeamId(), vo.getUserId(), vo.getUserEmail());
 			
 			if(result > 0) {
 				return ResponseEntity.ok().body("팀 초대 완료");
@@ -50,11 +50,11 @@ public class TeamController {
 	}
 	
 	//팀원 등록
-	public ResponseEntity<?> addTeamMember(@RequestBody TeamMemberVO vo) {
+	public ResponseEntity<?> addTeamMbr(@RequestBody TeamMemberVO vo) {
 		int result = 0;
 		
 		try {
-			result = service.addTeamMember(vo.getTeamId(), vo.getUserId(), vo.getAuth());
+			result = service.addTeamMbr(vo.getTeamId(), vo.getUserId(), vo.getAuth());
 			
 			if(result > 0) {
 				return ResponseEntity.ok().body("팀원 등록 완료");

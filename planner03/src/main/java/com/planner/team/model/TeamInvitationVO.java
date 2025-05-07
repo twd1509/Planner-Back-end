@@ -3,8 +3,8 @@ package com.planner.team.model;
 public class TeamInvitationVO {
 	private int id;					//아이디
 	private int teamId;				//팀 아이디
-	private int userId;				//초대한 사용자 아이디
-	private String userEmail;		//초대한 사용자 이메일
+	private int userId;				//초대 받은 사용자 아이디
+	private String userEmail;		//초대 받은 사용자 이메일
 	private String status;			//초대 상태(수락 대기 중 : N, 수락 : Y)
 	private String regDt;			//초대일자
 	private String updateDt;		//수정일자
