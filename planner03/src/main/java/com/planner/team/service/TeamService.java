@@ -58,8 +58,8 @@ public class TeamService {
 		return mapper.delInvitationByTeamId(teamId);
 	}
 	//초대 수락 시 기록 확인
-	public TeamInvitationVO chkInvitation(int id) {
-		return mapper.chkInvitation(id);
+	public TeamInvitationVO chkInvitation(int teamId, int userId) {
+		return mapper.chkInvitation(teamId, userId);
 	}
 	//초대 대기 중인 팀원
 	public ArrayList<TeamInvitationVO> waitInvitation(int teamId) {

@@ -22,7 +22,7 @@ public interface TeamMapper {
 	int acptInvitation(int teamId, int userId);							//초대 수락
 	int delInvitationById(int id);										//초대 기록 삭제
 	int delInvitationByTeamId(int teamId);								//초대 기록 삭제(팀 삭제 시)
-	TeamInvitationVO chkInvitation(int id);								//초대 수락 시 기록 확인
+	TeamInvitationVO chkInvitation(int teamId, int userId);				//초대 수락 시 기록 확인
 	ArrayList<TeamInvitationVO> waitInvitation(int teamId);				//초대 대기 중인 팀원
 	
 	/* 팀원 */

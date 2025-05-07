@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.planner03.team.mapper.TeamMapper">
+<mapper namespace="com.planner.team.mapper.TeamMapper">
 	<!--<< 팀 >>-->
 	<!--팀 등록-->
 	<insert id="insTeam">
@@ -19,11 +19,11 @@
 		UPDATE team SET name = #{name}, update_dt = now() WHERE id = #{id}
 	</update>
 	<!--현재 참여중인 팀 출력-->
-	<select id="slctTeam" resultType="com.planner03.team.model.TeamVO">
+	<select id="slctTeam" resultType="com.planner.team.model.TeamVO">
 		SELECT * FROM team WHERE id IN (SELECT team_id FROM teamMember WHERE user_id = #{userId})
 	</select>
 	<!--팀 출력(id)-->
-	<select id="slctTeamById" resultType="com.planner03.team.model.TeamVO">
+	<select id="slctTeamById" resultType="com.planner.team.model.TeamVO">
 		SELECT * FROM team WHERE id = #{id}
 	</select>
 	
@@ -45,11 +45,11 @@
 		DELETE FROM teamInvitation FROM team_id = #{teamId}
 	</delete>
 	<!--팀 초대 수락 시 기록 확인-->
-	<select id="chkInvitation" resultType="com.planner03.team.model.TeamInvitationVO">
-		SELECT * FROM teamInvitation WHERE id = #{id}
+	<select id="chkInvitation" resultType="com.planner.team.model.TeamInvitationVO">
+		SELECT * FROM teamInvitation WHERE team_id = #{teamId} AND user_id = #{userId}
 	</select>
 	<!--팀 초대 대기 중인 팀원-->
-	<select id="waitInvitation" resultType="com.planner03.team.model.TeamInvitationVO">
+	<select id="waitInvitation" resultType="com.planner.team.model.TeamInvitationVO">
 		SELECT * FROM teamInvitation WHERE team_id = #{teamId} AND status = 'N'
 	</select>
 	
