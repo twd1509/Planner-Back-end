@@ -46,7 +46,7 @@
 	</delete>
 	<!--팀 초대 수락 시 기록 확인-->
 	<select id="chkInvitation" resultType="com.planner.team.model.TeamInvitationVO">
-		SELECT * FROM teamInvitation WHERE team_id = #{teamId} AND user_id = #{userId}
+		SELECT * FROM teamInvitation WHERE status = 'N' AND team_id = #{teamId} AND user_id = #{userId}
 	</select>
 	<!--팀 초대 대기 중인 팀원-->
 	<select id="waitInvitation" resultType="com.planner.team.model.TeamInvitationVO">
@@ -70,4 +70,7 @@
 	<delete id="delTeamMbrByTeamId">
 		DELETE FROM teamMember WHERE team_id = #{teamId}
 	</delete>
+	<select id="slctTeamMbrByTeamIdAndUserId">
+		SELECT * FROM teamMember WHERE team_id = #{teamId} AND user_id = #{userId}
+	</select>
 </mapper>

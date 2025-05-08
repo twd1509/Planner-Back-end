@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com.planner.team.mapper.TeamMapper;
 import com.planner.team.model.TeamInvitationVO;
+import com.planner.team.model.TeamMemberVO;
 import com.planner.team.model.TeamVO;
 
 @Service
@@ -82,5 +83,9 @@ public class TeamService {
 	//팀원 삭제(팀 삭제 시)
 	public int removeTeamMbrByTeamId(int teamId) {
 		return mapper.delTeamMbrByTeamId(teamId);
+	}
+	//팀원 조회
+	public TeamMemberVO getTeamMbr(int teamId, int userId) {
+		return mapper.slctTeamMbrByTeamIdAndUserId(teamId, userId);
 	}
 }

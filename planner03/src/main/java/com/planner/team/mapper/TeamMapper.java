@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import org.apache.ibatis.annotations.Mapper;
 
 import com.planner.team.model.TeamInvitationVO;
+import com.planner.team.model.TeamMemberVO;
 import com.planner.team.model.TeamVO;
 
 @Mapper
@@ -30,4 +31,5 @@ public interface TeamMapper {
 	int delTeamMbr(int id);												//팀원 삭제
 	int uptTeamMbrAuth(int auth, int id);								//팀원 권한 수정
 	int delTeamMbrByTeamId(int teamId);									//팀원 삭제(팀 삭제 시)
+	TeamMemberVO slctTeamMbrByTeamIdAndUserId(int teamId, int userId);	//팀원 조회(팀 아이디, 유저 아이디 이용)
 }
