@@ -11,10 +11,10 @@ import com.planner.team.model.TeamVO;
 @Mapper
 public interface TeamMapper {
 	/* 팀 */
-	int insTeam(int ownerId, String title);								//팀 등록
+	TeamVO insTeam(int ownerId, String title);								//팀 등록
 	int delTeam(int id);												//팀 삭제
 	int delTeamByOwnerId(int ownerId);									//팀 삭제(작성자 기준)
-	int uptTeam(String name, int id);									//팀명 수정
+	int uptTeam(String title, int id);									//팀명 수정
 	ArrayList<TeamVO> slctTeam(int userId);								//참여중인 팀 출력
 	TeamVO slctTeamById(int id);										//팀 출력(id)
 	

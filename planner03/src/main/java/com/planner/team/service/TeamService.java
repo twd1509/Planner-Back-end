@@ -17,7 +17,7 @@ public class TeamService {
 	
 	/* 팀 */
 	//팀 추가
-	public int addTeam(int ownerId, String title) {
+	public TeamVO addTeam(int ownerId, String title) {
 		return mapper.insTeam(ownerId, title);
 	}
 	//팀 삭제
@@ -29,8 +29,8 @@ public class TeamService {
 		return mapper.delTeamByOwnerId(ownerId); 
 	}
 	//팀명 수정
-	public int modifyTeam(String name, int id) {
-		return mapper.uptTeam(name, id);
+	public int modifyTeam(String title, int id) {
+		return mapper.uptTeam(title, id);
 	}
 	//참여중인 팀 출력
 	public ArrayList<TeamVO> getTeam(int userId) {
@@ -84,7 +84,7 @@ public class TeamService {
 	public int removeTeamMbrByTeamId(int teamId) {
 		return mapper.delTeamMbrByTeamId(teamId);
 	}
-	//팀원 조회
+	//팀원 조회(팀 아이디, 유저 아이디 이용)
 	public TeamMemberVO getTeamMbr(int teamId, int userId) {
 		return mapper.slctTeamMbrByTeamIdAndUserId(teamId, userId);
 	}

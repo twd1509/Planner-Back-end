@@ -3,7 +3,7 @@
 <mapper namespace="com.planner.team.mapper.TeamMapper">
 	<!--<< 팀 >>-->
 	<!--팀 등록-->
-	<insert id="insTeam">
+	<insert id="insTeam" parameterType="com.planner.team.model.TeamVO" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
 		INSERT INTO team (owner_id, title, reg_dt, update_dt) VALUES (#{ownerId}, #{title}, now(), now())
 	</insert>
 	<!--팀 삭제(id 기준)-->
@@ -16,7 +16,7 @@
 	</delete>
 	<!--팀명 수정-->
 	<update id="uptTeam">
-		UPDATE team SET name = #{name}, update_dt = now() WHERE id = #{id}
+		UPDATE team SET title = #{title}, update_dt = now() WHERE id = #{id}
 	</update>
 	<!--현재 참여중인 팀 출력-->
 	<select id="slctTeam" resultType="com.planner.team.model.TeamVO">
@@ -70,6 +70,7 @@
 	<delete id="delTeamMbrByTeamId">
 		DELETE FROM teamMember WHERE team_id = #{teamId}
 	</delete>
+	<!--팀원 조회(팀 아이디, 유저 아이디 이용)-->
 	<select id="slctTeamMbrByTeamIdAndUserId">
 		SELECT * FROM teamMember WHERE team_id = #{teamId} AND user_id = #{userId}
 	</select>

@@ -1,14 +1,19 @@
 package com.planner.team.controller;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.planner.team.model.TeamInvitationVO;
+import com.planner.team.model.TeamMemberVO;
 import com.planner.team.model.TeamVO;
 import com.planner.team.service.EmailService;
 import com.planner.team.service.TeamService;
@@ -22,37 +27,64 @@ public class TeamController {
 	private EmailService emailService;
 	
 	//팀 생성
+	@PostMapping("/addteam")
 	public ResponseEntity<?> addTeam(@RequestBody TeamVO vo) {
-		int result = 0;
-		
 		try {
 			//세션 확인
 			
-			//팀 생성
-			result = service.addTeam(vo.getOwnerId(), vo.getTitle());
 			
-			if(result > 0) {
-				return ResponseEntity.ok().body("팀 등록 완료");
+			//팀 생성
+			service.addTeam(vo.getOwnerId(), vo.getTitle());
+			
+			//방금 생성한 id값 조회
+			TeamVO teamVo = new TeamVO();
+			int newId = teamVo.getId();
+			
+			if(newId != 0) {
+				//팀원 등록
+				int result = 0;
+				result = service.addTeamMbr(newId, vo.getOwnerId(), 1);
+				
+				if(result > 0) {
+					return ResponseEntity.ok().body("팀 등록 완료");
+				} else {
+					return ResponseEntity.ok().body("팀 등록 실패");
+				}
 			} else {
 				return ResponseEntity.ok().body("팀 등록 실패");
-			} 
+			}
 		} catch (Exception e) {
 			return ResponseEntity.ok().body("오류 발생");
 		}
 	}
 	
 	//팀 삭제
+	@PostMapping("/removeteam")
 	public ResponseEntity<?> removeTeam(@PathVariable int userId, @PathVariable int id) {
 		int result = 0;
 		
 		try {
 			//세션 확인
 			
+			
 			//팀 삭제
 			result = service.removeTeam(id);
 			
 			if(result > 0) {
-				return ResponseEntity.ok().body("팀 삭제 완료");
+				//팀 멤버 삭제
+				int delMbrResult = service.removeTeamMbrByTeamId(id);
+				if(delMbrResult > 0) {
+					//팀 초대 내역 삭제
+					int delInvitationResult = service.removeInvitationByTeamId(id);
+					
+					if(delInvitationResult > 0) {
+						return ResponseEntity.ok().body("팀 삭제 완료");
+					} else {
+						return ResponseEntity.ok().body("팀 초대 내역 삭제 실패");
+					} 
+				} else {
+					return ResponseEntity.ok().body("팀 멤버 삭제 실패");
+				}
 			} else {
 				return ResponseEntity.ok().body("팀 삭제 실패");
 			}
@@ -61,7 +93,47 @@ public class TeamController {
 		}
 	}
 	
+	//팀 정보 수정
+	public ResponseEntity<?> modifyTeam(@RequestBody TeamVO vo) {
+		int result = 0;
+		
+		try {
+			//권한 확인
+			TeamMemberVO memVo = service.getTeamMbr(vo.getId(), vo.getOwnerId());
+			if(memVo.getAuth() == 1) {
+				//팀 정보 수정
+				result = service.modifyTeam(vo.getTitle(), vo.getId());
+				
+				if(result > 0) {
+					return ResponseEntity.ok().body("팀 정보 수정 완료");
+				} else {
+					return ResponseEntity.ok().body("팀 정보 수정 실패");
+				}			
+			} else {
+				return ResponseEntity.ok().body("권한이 없습니다.");
+			}
+		} catch (Exception e) {
+			return ResponseEntity.ok().body("오류 발생");
+		}
+	}
+	
+	//현재 소속되어 있는 팀 확인
+	public ResponseEntity<?> getTeam(@RequestBody int userId) {
+		//세션 확인
+		
+		//소속되어 있는 팀 확인
+		try {
+			List<TeamVO> result = new ArrayList<TeamVO>();
+			result = service.getTeam(userId);
+			
+			return ResponseEntity.ok(result); 
+		} catch (Exception e) {
+			return ResponseEntity.ok().body("오류 발생");
+		}
+	}
+	
 	//팀 초대
+	@PostMapping("/addinvitation")
 	public ResponseEntity<?> addTeamInvitation(@RequestBody TeamInvitationVO vo) {
 		int result = 0;
 		int teamId = vo.getTeamId();
@@ -98,8 +170,45 @@ public class TeamController {
 		}
 	}
 	
+	//초대 기록 삭제
+	public ResponseEntity<?> removeInvitation(@RequestBody TeamInvitationVO vo) {
+		int result = 0;
+		
+		try {
+			//세션 확인
+			
+			//권한 확인
+			TeamMemberVO memVo = service.getTeamMbr(vo.getTeamId(), vo.getUserId());
+			if(memVo.getAuth() == 1) {
+				result = service.removeInvitationById(vo.getId());
+				
+				if(result > 0) {
+					return ResponseEntity.ok().body("초대 기록 삭제 완료");
+				} else {
+					return ResponseEntity.ok().body("초대 기록 삭제 실패");
+				}
+			} else {
+				return ResponseEntity.ok().body("권한이 없습니다.");
+			}
+			
+		} catch (Exception e) {
+			return ResponseEntity.ok().body("오류 발생");
+		}
+	}
+	
+	//초대 대기 중인 팀원
+	public ResponseEntity<?> waitInvitation(@PathVariable int teamId) {
+		List<TeamInvitationVO> result = service.waitInvitation(teamId);
+		
+		if(result != null) {
+			return ResponseEntity.ok(result);
+		} else {
+			return ResponseEntity.ok().body("초대 기록 삭제 실패");
+		}
+	}
+	
 	//팀원 등록
-	@GetMapping("/addTeamMbr")
+	@GetMapping("/addteammbr")
 	public ResponseEntity<?> addTeamMbr(@PathVariable int teamId, @PathVariable int userId) {
 		int result = 0;
 		
@@ -138,13 +247,16 @@ public class TeamController {
 		}
 	}
 	
+	//팀원 삭제
+	
+	
 	//이메일 전송
-	public void sendEmail(String to, String subject, String body) {
+	private void sendEmail(String to, String subject, String body) {
 		emailService.sendSimpleEmail(to, subject, body);
 	}
 	
 	//세션 확인
-	public int chkLoginUserId(int userId) {
+	private int chkLoginUserId(int userId) {
 		//return service.chkUserId(userId);
 		return 1;
 	}
