@@ -248,7 +248,44 @@ public class TeamController {
 	}
 	
 	//팀원 삭제
+	public ResponseEntity<?> removeTeamMbr(@RequestBody TeamMemberVO vo) {
+		int result = 0;
+		
+		try {
+			//권한 확인
+			
+			//팀원 삭제
+			result = service.removeTeamMbr(vo.getId());
+			
+			if(result > 0) {
+				return ResponseEntity.ok().body("팀원 삭제 완료");
+			} else {
+				return ResponseEntity.ok().body("팀원 삭제 실패");
+			}
+		} catch (Exception e) {
+			return ResponseEntity.ok().body("오류 발생");
+		}
+	}
 	
+	//팀원 수정
+	public ResponseEntity<?> modifyTeamMbr(@RequestBody TeamMemberVO vo) {
+		int result = 0;
+		
+		try {
+			//권한 확인
+			
+			//팀원 수정
+			result = service.modifyTeamMbrAuth(vo.getAuth(), vo.getId());
+			
+			if(result > 0) {
+				return ResponseEntity.ok().body("팀원 수정 완료");
+			} else {
+				return ResponseEntity.ok().body("팀원 수정 실패");
+			}
+		} catch (Exception e) {
+			return ResponseEntity.ok().body("오류 발생");
+		}
+	}
 	
 	//이메일 전송
 	private void sendEmail(String to, String subject, String body) {

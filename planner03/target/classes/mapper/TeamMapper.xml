@@ -20,7 +20,7 @@
 	</update>
 	<!--현재 참여중인 팀 출력-->
 	<select id="slctTeam" resultType="com.planner.team.model.TeamVO">
-		SELECT * FROM team WHERE id IN (SELECT team_id FROM teamMember WHERE user_id = #{userId})
+		SELECT * FROM team WHERE id IN (SELECT team_id FROM team_member WHERE user_id = #{userId})
 	</select>
 	<!--팀 출력(id)-->
 	<select id="slctTeamById" resultType="com.planner.team.model.TeamVO">
@@ -30,48 +30,48 @@
 	<!--<< 팀 초대 >>-->
 	<!--팀 초대 인원 추가-->
 	<insert id="insInvitation">
-		INSERT INTO teamInvitation (team_id, user_id, user_email, status, reg_dt, update_dt) VALUES (#{teamId}, #{userId}, #{userEmail}, 'N', now(), now())
+		INSERT INTO team_invitation (team_id, user_id, user_email, status, reg_dt, update_dt) VALUES (#{teamId}, #{userId}, #{userEmail}, 'N', now(), now())
 	</insert>
 	<!--팀 초대 수락-->
 	<update id="acptInvitation">
-		UPDATE teamInvitation SET status = 'Y', update_dt = now() WHERE team_id = #{teamId} AND user_id = #{userId}
+		UPDATE team_invitation SET status = 'Y', update_dt = now() WHERE team_id = #{teamId} AND user_id = #{userId}
 	</update>
 	<!--팀 초대 기록 삭제-->
 	<delete id="delInvitationById">
-		DELETE FROM teamInvitation FROM id = #{id}
+		DELETE FROM team_invitation FROM id = #{id}
 	</delete>
 	<!--팀 삭제 시 팀 초대 기록 삭제-->
 	<delete id="delInvitationByTeamId">
-		DELETE FROM teamInvitation FROM team_id = #{teamId}
+		DELETE FROM team_invitation FROM team_id = #{teamId}
 	</delete>
 	<!--팀 초대 수락 시 기록 확인-->
 	<select id="chkInvitation" resultType="com.planner.team.model.TeamInvitationVO">
-		SELECT * FROM teamInvitation WHERE status = 'N' AND team_id = #{teamId} AND user_id = #{userId}
+		SELECT * FROM team_invitation WHERE status = 'N' AND team_id = #{teamId} AND user_id = #{userId}
 	</select>
 	<!--팀 초대 대기 중인 팀원-->
 	<select id="waitInvitation" resultType="com.planner.team.model.TeamInvitationVO">
-		SELECT * FROM teamInvitation WHERE team_id = #{teamId} AND status = 'N'
+		SELECT * FROM team_invitation WHERE team_id = #{teamId} AND status = 'N'
 	</select>
 	
 	<!--<< 팀원 >>-->
 	<!--팀원 등록-->
 	<insert id="insTeamMbr">
-		INSERT INTO teamMember (team_id, user_id, auth, join_dt, update_dt) VALUES (#{teamId}, #{userId}, #{auth}, now(), now())
+		INSERT INTO team_member (team_id, user_id, auth, join_dt, update_dt) VALUES (#{teamId}, #{userId}, #{auth}, now(), now())
 	</insert>
 	<!--팀원 삭제-->
 	<delete id="delTeamMbr">
-		DELETE FROM teamMember WHERE id = #{id}
+		DELETE FROM team_member WHERE id = #{id}
 	</delete>
 	<!--팀원 일정 작성 권한 수정-->
 	<update id="uptTeamMbrAuth">
-		UPDATE teamMember SET auth = #{auth}, update_dt = now() WHERE id = #{id} 
+		UPDATE team_member SET auth = #{auth}, update_dt = now() WHERE id = #{id} 
 	</update>
 	<!--팀 삭제 시 팀원 삭제-->
 	<delete id="delTeamMbrByTeamId">
-		DELETE FROM teamMember WHERE team_id = #{teamId}
+		DELETE FROM team_member WHERE team_id = #{teamId}
 	</delete>
 	<!--팀원 조회(팀 아이디, 유저 아이디 이용)-->
 	<select id="slctTeamMbrByTeamIdAndUserId">
-		SELECT * FROM teamMember WHERE team_id = #{teamId} AND user_id = #{userId}
+		SELECT * FROM team_member WHERE team_id = #{teamId} AND user_id = #{userId}
 	</select>
 </mapper>
