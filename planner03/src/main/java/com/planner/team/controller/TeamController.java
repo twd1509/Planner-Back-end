@@ -26,6 +26,7 @@ public class TeamController {
 	@Autowired
 	private EmailService emailService;
 	
+	String pathUrl = "localhost:8083";
 	//팀 생성
 	@PostMapping("/addteam")
 	public ResponseEntity<?> addTeam(@RequestBody TeamVO vo) {
@@ -155,7 +156,7 @@ public class TeamController {
 				if(result > 0) {
 					//초대 메일 전송
 					String body = "초대 링크 : ";
-					body += "localhost:8083/addTeamMbr/" + teamId  + "/" + userId; 
+					body += pathUrl + "/addTeamMbr/" + teamId  + "/" + userId; 
 					sendEmail(email, "일정 관리 팀 초대 메일입니다.", body);
 					
 					return ResponseEntity.ok().body("팀 초대 완료");
